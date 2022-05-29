@@ -1,0 +1,17 @@
+.Tile p {
+    font-size: 32px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    line-height: 60px; /*take this out later if I can better vertically align the chars*/
+    
+}
+
+.Tile {
+    border: 3px black solid;
+    display: inline-block;
+    height: 60px;
+    width: 60px;
+    margin: 5px;
+    vertical-align: top; /*need to have this for some reason or else divs jump when I add chars*/
+}
