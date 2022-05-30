@@ -8,10 +8,11 @@
 }
 
 .Tile {
-    border: 3px black solid;
+    border: 2px gray solid;
     display: inline-block;
     height: 60px;
     width: 60px;
     margin: 5px;
     vertical-align: top; /*need to have this for some reason or else divs jump when I add chars*/
+    border-radius: 5%;
 }

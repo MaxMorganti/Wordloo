@@ -1,1 +1,12 @@
-#parentwrap { vertical-align:top; }
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: black 2px solid; */
+    height: 900px;
+
+}
+
+/* .gameBoard {
+     border: black 2px dotted; 
+} */

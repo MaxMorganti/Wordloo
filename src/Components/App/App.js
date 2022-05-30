@@ -1,48 +1,75 @@
 import './App.css';
 import '../../reset.css'
-import {Tile} from '../Tile/Tile';
-import React, {useState} from 'react';
+import {Row} from '../Row/Row';
+import { possibleWords } from '../../possibleWords';
+import React, {useState,useEffect} from 'react';
 
-const correctWord = ['C','R','E','A','T','E'];
-let posIndex = 0;
+const correctWord = ['S','Q','U','I','S','H'];
+let colIndex = 0;
+let rowIndex = 0;
 
 function App() {
  
-  const [char,setChar] = useState(['','','','','','']);
-  const [color,setColor] = useState(['white','white','white','white','white','white']);
+  //initialize board state
+  const [char,setChar] = useState([
+    ['','','','','',''],
+    ['','','','','',''],
+    ['','','','','',''],
+    ['','','','','',''],
+    ['','','','','',''],
+    ['','','','','','']
+  ]);
+  const [color,setColor] = useState([
+    ['white','white','white','white','white','white'],
+    ['white','white','white','white','white','white'],
+    ['white','white','white','white','white','white'],
+    ['white','white','white','white','white','white'],
+    ['white','white','white','white','white','white'],
+    ['white','white','white','white','white','white']
+]);
+
+  useEffect(() => {
+    let randomWordIndex = Math.floor((Math.random()*possibleWords.length) + 1);
+    console.log(possibleWords[randomWordIndex]);
+  },[]);
 
   const handleKeyDown = (event) => {
-      
+
+    //handle Enter: need to reset colIndex, increment RowIndex, run checks + animations
+    if(event.key === 'Enter') {
+      if(colIndex !== 6) return; //eventually play a little animation here that input isn't valid
+      handleSubmit();
+    }
+
+
     //handle backspace
-      if(event.key === 'Backspace') {
-        if(posIndex === 0) return;
-        posIndex--;
+    if(event.key === 'Backspace') { 
+        if(colIndex === 0) return;
+        colIndex--;
         setChar( prev => {
           let newChars = prev.slice();
-          newChars[posIndex] = '';
+          newChars[rowIndex][colIndex] = '';
           return newChars;
         });
         return;
-      } 
+    } 
 
-      //keep input from going out of bounds
-      if(posIndex === 6) return;
-      //validate only alphabetical chars
-      if(event.keyCode > 90 || event.keyCode < 65) return;
-
-      posIndex++;
+    //keep input from going out of bounds
+    if(colIndex === 6) return;
+    //validate only alphabetical chars
+    if(event.keyCode > 90 || event.keyCode < 65) return;
+      colIndex++;
       setChar( prev => {
         let newChars = prev.slice();
-        newChars[posIndex - 1] = event.key.toUpperCase();
+        newChars[rowIndex][colIndex - 1] = event.key.toUpperCase();
         return newChars;
       }); 
   }
 
-  const handleSubmit = () => {
-    checkInput(char,correctWord);
-    //if(char === correctLetter) {
-    // setColor('lightgreen');
-    //}
+  const handleSubmit = async () => {
+    await checkInput(char[rowIndex],correctWord);
+    rowIndex++;
+    colIndex = 0;
   }
 
   const checkInput = (inputArray,correctArray) => {
@@ -52,7 +79,7 @@ function App() {
       if(inputArray[i] === correctArray[i]) {
         setColor( prev => {
           let newColors = prev.slice();
-          newColors[i] = 'lightgreen';
+          newColors[rowIndex][i] = 'lightgreen';
           return newColors;
         });
       }      
@@ -63,7 +90,7 @@ function App() {
       if(correctArray.includes(inputArray[i]) && inputArray[i] !== correctArray[i]) {
         setColor( prev => {
           let newColors = prev.slice();
-          newColors[i] = 'yellow';
+          newColors[rowIndex][i] = 'yellow';
           return newColors;
         });
       }
@@ -71,15 +98,15 @@ function App() {
   }
 
   return (
-    <div onKeyDown={handleKeyDown} tabIndex="0" style={{outline: "none"}}>
-      <Tile color={color[0]} char={char[0]}/>
-      <Tile color={color[1]} char={char[1]}/>
-      <Tile color={color[2]} char={char[2]}/>
-      <Tile color={color[3]} char={char[3]}/>
-      <Tile color={color[4]} char={char[4]}/>
-      <Tile color={color[5]} char={char[5]}/>
-      <br/>
-      <button onClick={handleSubmit}>Submit</button>
+    <div className="container">
+      <div className="gameBoard" onKeyDown={handleKeyDown} tabIndex="0" style={{outline: "none"}}>
+        <Row rowChars={char[0]} rowColors={color[0]}/>
+        <Row rowChars={char[1]} rowColors={color[1]}/>
+        <Row rowChars={char[2]} rowColors={color[2]}/>
+        <Row rowChars={char[3]} rowColors={color[3]}/>
+        <Row rowChars={char[4]} rowColors={color[4]}/>
+        <Row rowChars={char[5]} rowColors={color[5]}/>
+      </div>
     </div>
   )
 }
